@@ -10,8 +10,7 @@ import { ViaCEPAddress } from '@/protocols';
 async function getAddressFromCEP(cep: string) {
   // FIXME: está com CEP fixo!
   const result = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
-
-  if (!result.data) {
+  if (!result.data || result.data.localidade === undefined) {
     throw notFoundError();
   }
 
@@ -60,8 +59,7 @@ async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollm
   const address = getAddressForUpsert(params.address);
 
   // TODO - Verificar se o CEP é válido antes de associar ao enrollment.
-  const verifyCep = await getAddressFromCEP(address.cep);
-  if (verifyCep.cidade === undefined) throw notFoundError();
+  await getAddressFromCEP(address.cep);
 
   const newEnrollment = await enrollmentRepository.upsert(params.userId, enrollment, exclude(enrollment, 'userId'));
 
