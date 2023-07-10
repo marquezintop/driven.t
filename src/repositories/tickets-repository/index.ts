@@ -31,10 +31,29 @@ async function postTicket(data: dataTicket) {
   });
 }
 
+async function ticketIdExists(userId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      id: userId,
+    },
+  });
+}
+
+async function tickedIdAuthorization(enrollmentId: number, ticketId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      enrollmentId,
+      id: ticketId,
+    },
+  });
+}
+
 const ticketsRepository = {
   findTicketsType,
   findTicket,
   postTicket,
+  ticketIdExists,
+  tickedIdAuthorization,
 };
 
 export default ticketsRepository;
