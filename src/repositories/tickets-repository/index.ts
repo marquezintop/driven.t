@@ -1,3 +1,4 @@
+import { Ticket } from '@prisma/client';
 import { prisma } from '@/config';
 import { dataTicket } from '@/protocols';
 
@@ -48,12 +49,24 @@ async function tickedIdAuthorization(enrollmentId: number, ticketId: number) {
   });
 }
 
+async function updateTicketSatus(ticketId: number) {
+  return prisma.ticket.update({
+    data: {
+      status: 'PAID',
+    },
+    where: {
+      id: ticketId,
+    },
+  });
+}
+
 const ticketsRepository = {
   findTicketsType,
   findTicket,
   postTicket,
   ticketIdExists,
   tickedIdAuthorization,
+  updateTicketSatus,
 };
 
 export default ticketsRepository;
