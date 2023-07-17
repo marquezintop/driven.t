@@ -27,7 +27,6 @@ async function readHotels(userId: number): Promise<Hotel[]> {
 
 async function readHotelById(userId: number, hotelId: number): Promise<HotelWithRooms> {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
-  console.log(enrollment);
   if (!enrollment) throw notFoundError();
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);

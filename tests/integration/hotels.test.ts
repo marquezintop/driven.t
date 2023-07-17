@@ -157,7 +157,7 @@ describe('GET /hotels/:id with valid token', () => {
     const token = await generateValidToken(user);
     const hotel = await createHotel();
 
-    const result = await api.get(`/hotels${hotel.id}`).set('Authorization', `Bearer ${token}`);
+    const result = await api.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
 
     expect(result.status).toBe(httpStatus.NOT_FOUND);
   });
@@ -167,7 +167,7 @@ describe('GET /hotels/:id with valid token', () => {
     await createEnrollmentWithAddress(user);
     const hotel = await createHotel();
 
-    const result = await api.get(`/hotels${hotel.id}`).set('Authorization', `Bearer ${token}`);
+    const result = await api.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
 
     expect(result.status).toBe(httpStatus.NOT_FOUND);
   });
@@ -179,7 +179,7 @@ describe('GET /hotels/:id with valid token', () => {
     await createTicketStatusReserved(enrollment.id, ticketType.id);
     const hotel = await createHotel();
 
-    const result = await api.get(`/hotels${hotel.id}`).set('Authorization', `Bearer ${token}`);
+    const result = await api.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
 
     expect(result.status).toBe(httpStatus.PAYMENT_REQUIRED);
   });
@@ -191,7 +191,7 @@ describe('GET /hotels/:id with valid token', () => {
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
     const hotel = await createHotel();
 
-    const result = await api.get(`/hotels${hotel.id}`).set('Authorization', `Bearer ${token}`);
+    const result = await api.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
 
     expect(result.status).toBe(httpStatus.PAYMENT_REQUIRED);
   });
@@ -203,7 +203,7 @@ describe('GET /hotels/:id with valid token', () => {
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
     const hotel = await createHotel();
 
-    const result = await api.get(`/hotels${hotel.id}`).set('Authorization', `Bearer ${token}`);
+    const result = await api.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
 
     expect(result.status).toBe(httpStatus.PAYMENT_REQUIRED);
   });
