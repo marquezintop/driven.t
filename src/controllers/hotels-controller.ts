@@ -15,3 +15,17 @@ export async function getHotels(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
+
+export async function getHotelById(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const hotelId = parseInt(req.params.hotelId);
+
+  try {
+    const hotel = await hotelsService.readHotelById(userId, hotelId);
+    res.status(httpStatus.OK).send(hotel);
+  } catch (error) {
+    if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
+    if (error.name === 'PaymentRequired') return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+}
