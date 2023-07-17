@@ -13,7 +13,7 @@ async function readHotels(userId: number): Promise<Hotel[]> {
   if (!ticket) throw notFoundError();
 
   if (
-    ticket.status !== TicketStatus.RESERVED ||
+    ticket.status === TicketStatus.RESERVED ||
     ticket.TicketType.includesHotel === false ||
     ticket.TicketType.isRemote === true
   )
@@ -27,13 +27,15 @@ async function readHotels(userId: number): Promise<Hotel[]> {
 
 async function readHotelById(userId: number, hotelId: number): Promise<HotelWithRooms> {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  console.log(enrollment);
   if (!enrollment) throw notFoundError();
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
+  console.log(ticket);
   if (!ticket) throw notFoundError();
 
   if (
-    ticket.status !== TicketStatus.RESERVED ||
+    ticket.status === TicketStatus.RESERVED ||
     ticket.TicketType.includesHotel === false ||
     ticket.TicketType.isRemote === true
   )
@@ -43,6 +45,7 @@ async function readHotelById(userId: number, hotelId: number): Promise<HotelWith
   if (!hotels || hotels.length === 0) throw notFoundError();
 
   const hotel: HotelWithRooms = await hotelsRepository.findHotelById(hotelId);
+  console.log(hotel);
   if (!hotel) throw notFoundError();
 
   return hotel;
