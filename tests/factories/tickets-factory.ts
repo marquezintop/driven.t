@@ -56,12 +56,12 @@ export async function createTicket(enrollmentId: number, ticketTypeId: number, s
   });
 }
 
-export async function createTicketStatusReserved(enrollmentId: number, ticketTypeId: number, status: TicketStatus) {
+export async function createTicketStatusReserved(enrollmentId: number, ticketTypeId: number) {
   return prisma.ticket.create({
     data: {
       enrollmentId,
       ticketTypeId,
-      status,
+      status: TicketStatus.RESERVED,
     },
   });
 }

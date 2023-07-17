@@ -31,7 +31,6 @@ async function readHotelById(userId: number, hotelId: number): Promise<HotelWith
   if (!enrollment) throw notFoundError();
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
-  console.log(ticket);
   if (!ticket) throw notFoundError();
 
   if (
