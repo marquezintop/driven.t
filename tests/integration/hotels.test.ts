@@ -64,7 +64,7 @@ describe('GET /hotels', () => {
       expect(response.status).toEqual(httpStatus.PAYMENT_REQUIRED);
     });
 
-    it('should respond with status 404 when user has no enrollment ', async () => {
+    it('should respond with status 404 when user has no enrollment', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
 

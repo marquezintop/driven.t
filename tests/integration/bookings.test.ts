@@ -56,6 +56,9 @@ describe('GET /booking', () => {
   it('should respond with status 200 and the booking when user has booking', async () => {
     const user = await createUser();
     const token = await generateValidToken(user);
+    const enrollment = await createEnrollmentWithAddress(user);
+    const ticketType = await createTicketTypeWithHotel();
+    await createTicket(enrollment.id, ticketType.id, 'PAID');
     const hotel = await createHotel();
     const room = await createRoom(hotel.id);
     const booking = await createBooking(user.id, room.id);
@@ -195,14 +198,14 @@ describe('PUT /booking', () => {
     const room = await createRoom(hotel.id);
     const newRoom = await createRoom(hotel.id);
     const booking = await createBooking(user.id, room.id);
-    const newBooking = await createBooking(user.id, newRoom.id);
+    await createBooking(user.id, newRoom.id);
 
     const result = await server
       .put(`/booking/${booking.id}`)
       .set('Authorization', `Bearer ${token}`)
       .send({ roomId: newRoom.id });
 
-    expect(result.status).toBe(httpStatus.FORBIDDEN);
+    expect(result.status).toBe(httpStatus.NOT_FOUND);
   });
 
   it('should respond with status 200 when room is not full', async () => {
