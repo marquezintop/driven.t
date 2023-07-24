@@ -22,7 +22,7 @@ export async function postBooking(req: AuthenticatedRequest, res: Response) {
     const id = await bookingsService.createBooking(userId, roomId);
     return res.status(200).send({ bookingId: id });
   } catch (error) {
-    if (error.statusText === 'Outside business rules') return res.sendStatus(httpStatus.FORBIDDEN);
+    if (error.name === 'CannotListBokingsError') return res.sendStatus(httpStatus.FORBIDDEN);
     if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
     return res.sendStatus(httpStatus.UNAUTHORIZED);
   }
@@ -37,7 +37,7 @@ export async function putBooking(req: AuthenticatedRequest, res: Response) {
     const id = await bookingsService.updateBooking(userId, roomId, Number(bookingId));
     return res.status(200).send({ bookingId: id });
   } catch (error) {
-    if (error.statusText === 'Outside business rules') return res.sendStatus(httpStatus.FORBIDDEN);
+    if (error.statusText === 'CannotListBokingsError') return res.sendStatus(httpStatus.FORBIDDEN);
     return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }

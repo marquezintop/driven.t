@@ -1,5 +1,5 @@
 import { TicketStatus } from '@prisma/client';
-import { cannotListBokkingsError, notFoundError, requestError } from '../../errors';
+import { cannotListBokingsError, notFoundError, requestError } from '../../errors';
 import enrollmentRepository from '../../repositories/enrollment-repository';
 import ticketsRepository from '../../repositories/tickets-repository';
 import bookingsRepository from '../../repositories/bookings-repository';
@@ -22,14 +22,14 @@ async function createBooking(userId: number, roomId: number) {
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
   if (!ticket || ticket.status === 'RESERVED' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
-    throw cannotListBokkingsError();
+    throw cannotListBokingsError();
   }
 
   const room = await bookingsRepository.findRoomById(roomId);
   if (!room) throw notFoundError();
 
   const quantityOfRooms = await bookingsRepository.findBookingsByRoomId(roomId);
-  if (room.capacity === quantityOfRooms.length) throw requestError(403, 'Outside business rules');
+  if (room.capacity === quantityOfRooms.length) throw cannotListBokingsError();
 
   const booking = await bookingsRepository.createBooking(userId, roomId);
 
@@ -38,13 +38,13 @@ async function createBooking(userId: number, roomId: number) {
 
 async function updateBooking(userId: number, roomId: number, bookingId: number) {
   const isBooking = await bookingsRepository.findBookingByUserId(userId);
-  if (!isBooking) throw requestError(403, 'Outside business rules');
+  if (!isBooking) throw cannotListBokingsError();
 
   const room = await bookingsRepository.findRoomById(roomId);
   if (!room) throw notFoundError();
 
   const quantityOfRooms = await bookingsRepository.findBookingsByRoomId(roomId);
-  if (room.capacity === quantityOfRooms.length) throw requestError(403, 'Outside business rules');
+  if (room.capacity === quantityOfRooms.length) throw cannotListBokingsError();
 
   const booking = await bookingsRepository.updateBooking(roomId, bookingId);
   return booking.id;

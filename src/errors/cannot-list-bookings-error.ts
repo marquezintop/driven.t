@@ -1,8 +1,8 @@
 import { ApplicationError } from '@/protocols';
 
-export function cannotListBokkingsError(): ApplicationError {
+export function cannotListBokingsError(): ApplicationError {
   return {
-    name: 'CannotListBokkingsError',
-    message: 'Cannot list Bokkings!',
+    name: 'CannotListBokingsError',
+    message: 'Cannot list Bokings!',
   };
 }
