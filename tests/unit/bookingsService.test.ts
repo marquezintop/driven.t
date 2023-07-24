@@ -1,54 +1,31 @@
-import faker from '@faker-js/faker';
-import bookingsRepositories from '../../src/repositories/bookings-repository';
-import bookingsService from '../../src/services/bookings-service';
-import enrollmentRepository from '../../src/repositories/enrollment-repository';
-import ticketsRepository from '../../src/repositories/tickets-repository';
+import { createEnrollmentWithAddress } from '../factories';
+import enrollmentRepository from '@/repositories/enrollment-repository';
+import bookingsService from '@/services/bookings-service';
+import ticketsRepository from '@/repositories/tickets-repository';
 
-describe('GET /booking', () => {
-  it('Should return send Not Found status when user has no bookings', async () => {
-    jest.spyOn(bookingsRepositories, 'getBookings').mockImplementationOnce(() => {
-      return undefined;
-    });
-
-    const promise = bookingsService.listBookings();
-
-    expect(promise).rejects.toEqual({
-      name: 'NotFoundError',
-      message: 'No result for this search!',
-    });
-  });
+beforeEach(() => {
+  jest.clearAllMocks();
 });
 
-describe('POST /booking', () => {
-  it('Should send Not Found status if user is not enrolled', async () => {
-    jest.spyOn(enrollmentRepository, 'findWithAddressByUserId').mockImplementationOnce(() => {
-      return undefined;
-    });
+describe('GET /booking test unit', () => {
+  it('should respond with status 404 if enrollment does not exists', async () => {
+    const userId = 1;
 
-    const roomId = faker.datatype.number();
-    const userId = faker.datatype.number();
-
-    const promise = bookingsService.makeBooking(roomId, userId);
-    expect(promise).rejects.toEqual({
+    jest.spyOn(enrollmentRepository, 'findWithAddressByUserId').mockResolvedValueOnce(null);
+    const booking = bookingsService.listBookings(userId);
+    expect(booking).rejects.toEqual({
       name: 'NotFoundError',
       message: 'No result for this search!',
     });
   });
 
-  it('Should send Not Found status if user does not have a ticket', async () => {
-    jest.spyOn(enrollmentRepository, 'findWithAddressByUserId').mockImplementationOnce((): any => {
-      return true;
-    });
+  it('should respond with status 404 if ticket does not exists', async () => {
+    const userId = 1;
 
-    jest.spyOn(ticketsRepository, 'findTicketByEnrollmentId').mockImplementationOnce(() => {
-      return undefined;
-    });
-
-    const roomId = faker.datatype.number();
-    const userId = faker.datatype.number();
-
-    const promise = bookingsService.makeBooking(roomId, userId);
-    expect(promise).rejects.toEqual({
+    jest.spyOn(enrollmentRepository, 'findWithAddressByUserId').mockResolvedValueOnce(createEnrollmentWithAddress());
+    jest.spyOn(ticketsRepository, 'findTicketByEnrollmentId').mockResolvedValueOnce(null);
+    const booking = bookingsService.listBookings(userId);
+    expect(booking).rejects.toEqual({
       name: 'NotFoundError',
       message: 'No result for this search!',
     });
