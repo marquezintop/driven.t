@@ -22,9 +22,8 @@ export async function postBooking(req: AuthenticatedRequest, res: Response) {
     const id = await bookingsService.createBooking(userId, roomId);
     return res.status(200).send({ bookingId: id });
   } catch (error) {
-    if (error.name === 'CannotListBokingsError') return res.sendStatus(httpStatus.FORBIDDEN);
     if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
-    return res.sendStatus(httpStatus.UNAUTHORIZED);
+    return res.sendStatus(httpStatus.FORBIDDEN);
   }
 }
 
